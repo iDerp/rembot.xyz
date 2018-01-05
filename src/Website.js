@@ -1,14 +1,25 @@
 const express = require('express');
 const app = express();
 
-exports.connect = () => {
-    app.listen(87, function() {
-        console.log('[WEBSITE]: rembot.xyz is now listening to port 87! Were live bitches');
-    });
-}
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (res) => {
-    res.sendFile('./public/index.html');
+app.use((req, res, next) => {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
-this.connect();
+// development error handler
+app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: err
+    });
+});
+
+app.set('port', process.env.PORT || 87);
+
+var server = app.listen(app.get('port'), () => {
+  console.log('Express server listening on port ' + server.address().port);
+});
